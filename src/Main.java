@@ -65,10 +65,9 @@ public class Main {
     }
 
     static void compareAlphabets(int key) {
-        String newAlphabet = "";
-        for (int i = 0; i < alphabetLength; i++)
-            newAlphabet += charAlphabet[Math.floorMod((alphabet.indexOf(charAlphabet[i]) + key), alphabetLength)];
+        System.out.println("Исходный алфавит:");
         System.out.println(alphabet);
-        System.out.println(newAlphabet);
+        System.out.println("Алфавит со сдвигом на " + key + ":");
+        System.out.println(encryption(alphabet, key));
     }
 }
