@@ -7,9 +7,9 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String text, request, encryptedText = "", decryptedText = "";
-        int key;
-        System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\n3.Вывести алфавит со сдвигом\nВведите цифру:");
+        String text = "", request = "", encryptedText = "", decryptedText = "";
+        int key = 0;
+        System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\n3.Сопоставить алфавиты\nВведите цифру:");
         request = sc.nextLine();
         while (!request.equals("STOP")) {
             switch (request) {
@@ -17,7 +17,7 @@ public class Main {
                     System.out.println("Введите текст:");
                     text = sc.nextLine();
                     System.out.println("Введите ключ:");
-                    key = Integer.parseInt(sc.next()) % alphabetLength;
+                    key = Math.floorMod(Integer.parseInt(sc.nextLine()), alphabetLength);
                     encryptedText = encryption(text, key);
                     System.out.println("Зашифрованный текст:");
                     System.out.println(encryptedText);
@@ -26,24 +26,23 @@ public class Main {
                     System.out.println("Введите зашифрованный текст:");
                     encryptedText = sc.nextLine();
                     System.out.println("Введите ключ:");
-                    key = Integer.parseInt(sc.next()) % alphabetLength;
+                    key = Math.floorMod(Integer.parseInt(sc.nextLine()), alphabetLength);
                     decryptedText = decryption(encryptedText, key);
                     System.out.println("Расшифрованный текст:");
                     System.out.println(decryptedText);
                 }
                 case "3" -> {
                     System.out.println("Введите ключ:");
-                    key = Integer.parseInt(sc.next()) % alphabetLength;
-                    System.out.println("Новый алфавит со сдвигом:");
-                    displayNewAlphabet(alphabet, key);
+                    key = Math.floorMod(Integer.parseInt(sc.nextLine()), alphabetLength);
+                    System.out.println("Сопоставление алфавитов:");
+                    compareAlphabets(key);
                 }
                 default -> System.out.println("Неверный ввод");
             }
             System.out.println();
-            System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\n3.Вывести алфавит со сдвигом\nВведите цифру:");
-            request = sc.next();
+            System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\n3.Сопоставить алфавиты\nВведите цифру:");
+            request = sc.nextLine();
         }
-        System.out.println(decryptedText);
     }
 
     // Функция шифровки текста
@@ -51,7 +50,7 @@ public class Main {
         String encryptedText = "";
         char[] charText = text.toCharArray();
         for (int i = 0; i < charText.length; i++)
-            encryptedText += charAlphabet[(alphabet.indexOf(charText[i]) + key) % alphabetLength];
+            encryptedText += charAlphabet[Math.floorMod((alphabet.indexOf(charText[i]) + key), alphabetLength)];
         return encryptedText;
     }
 
@@ -65,10 +64,11 @@ public class Main {
         return decryptedText;
     }
 
-    static void displayNewAlphabet(String alphabet, int key) {
+    static void compareAlphabets(int key) {
         String newAlphabet = "";
         for (int i = 0; i < alphabetLength; i++)
-            newAlphabet += charAlphabet[(alphabet.indexOf(charAlphabet[i]) + key) % alphabetLength];
+            newAlphabet += charAlphabet[Math.floorMod((alphabet.indexOf(charAlphabet[i]) + key), alphabetLength)];
+        System.out.println(alphabet);
         System.out.println(newAlphabet);
     }
 }
