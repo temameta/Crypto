@@ -4,7 +4,7 @@ public class ThirdLab {
     static final int AMOUNT_OF_CIRCUITS = 3;
     static char[] mainAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя1234567890!\"\\#$%&'()*+,-./:;<=>?@[]^_{|}~ ".toCharArray();
     static ArrayList<Character> originalAlphabet = new ArrayList<>();
-    static HashMap<Integer, HashMap<Integer, ArrayList<Character>>> circuits = new HashMap<>(AMOUNT_OF_CIRCUITS);
+    static HashMap<Integer, HashMap<Integer, ArrayList<Character>>> circuits = new HashMap<>();
 
     static {
         int seed = 1;
@@ -74,7 +74,7 @@ public class ThirdLab {
             encryptedText += circuits.get(circuitNum).get(alphabetNum).get(originalAlphabet.indexOf(c));
             if (++alphabetNum >= circuits.get(circuitNum).size()) {
                 alphabetNum = 0;
-                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
+                if (++circuitNum >= circuits.size()) circuitNum = 0;
             }
         }
         return encryptedText;
@@ -89,7 +89,7 @@ public class ThirdLab {
             decryptedText += originalAlphabet.get(circuits.get(circuitNum).get(alphabetNum).indexOf(c));
             if (++alphabetNum >= circuits.get(circuitNum).size()) {
                 alphabetNum = 0;
-                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
+                if (++circuitNum >= circuits.size()) circuitNum = 0;
             }
         }
         return decryptedText;
