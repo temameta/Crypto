@@ -1,39 +1,39 @@
 import java.util.*;
 
 public class ThirdLab {
+    static final int AMOUNT_OF_CIRCUITS = 3;
     static char[] mainAlphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя1234567890!\"\\#$%&'()*+,-./:;<=>?@[]^_{|}~ ".toCharArray();
-    static ArrayList<Character> originalAlphabet = new ArrayList<>(), firstCircuitFirstAlphabet = new ArrayList<>(), firstCircuitSecondAlphabet = new ArrayList<>(), firstCircuitThirdAlphabet = new ArrayList<>(),
-            secondCircuitFirstAlphabet = new ArrayList<>(), secondCircuitSecondAlphabet = new ArrayList<>(), secondCircuitThirdAlphabet = new ArrayList<>(),
-            thirdCircuitFirstAlphabet = new ArrayList<>(), thirdCircuitSecondAlphabet = new ArrayList<>(), thirdCircuitThirdAlphabet = new ArrayList<>();
-
-    static HashMap<Integer, ArrayList<Character>> firstCircuit = new HashMap<>(), secondCircuit = new HashMap<>(), thirdCircuit = new HashMap<>();
-    static HashMap<Integer, HashMap<Integer, ArrayList<Character>>> circuits = new HashMap<>();
+    static ArrayList<Character> originalAlphabet = new ArrayList<>();
+    static HashMap<Integer, HashMap<Integer, ArrayList<Character>>> circuits = new HashMap<>(AMOUNT_OF_CIRCUITS);
 
     static {
+        int seed = 1;
         for (char c : mainAlphabet) {
             originalAlphabet.add(c);
-            firstCircuitFirstAlphabet.add(c);
-            firstCircuitSecondAlphabet.add(c);
-            firstCircuitThirdAlphabet.add(c);
-            secondCircuitFirstAlphabet.add(c);
-            secondCircuitSecondAlphabet.add(c);
-            secondCircuitThirdAlphabet.add(c);
-            thirdCircuitFirstAlphabet.add(c);
-            thirdCircuitSecondAlphabet.add(c);
-            thirdCircuitThirdAlphabet.add(c);
         }
-        for (int i = 0; i < circuits.size()* circuits.get(1).size(); i++) {
-            Collections.shuffle(circuits.get(i), new Random(3));
+        System.out.println(originalAlphabet);
+        for (int i = 0; i < AMOUNT_OF_CIRCUITS; i++) {
+            //Создание контура
+            HashMap<Integer, ArrayList<Character>> circuit = new HashMap<>();
+            //Добавление контура в словарь
+            circuits.put(i, circuit);
+            for (int j = 0; j < 2 + new Random(i).nextInt(6); j++) {
+                //Создание алфавита
+                ArrayList<Character> alphabet = new ArrayList<>();
+                //Добавление алфавита в контур
+                circuits.get(i).put(j, alphabet);
+                //Наполнение алфавита
+                for (char c : mainAlphabet) {
+                    circuits.get(i).get(j).add(c);
+                }
+                //Перемешивание алфавита
+                Collections.shuffle(circuits.get(i).get(j), new Random(seed += 3));
+                //Вывод алфавита
+                System.out.println(circuits.get(i).get(j));
+            }
+            //Пустая строка между контурами
+            System.out.println();
         }
-
-        Collections.shuffle(firstCircuitFirstAlphabet, new Random(3));
-        Collections.shuffle(firstCircuitSecondAlphabet, new Random(5));
-        Collections.shuffle(firstCircuitThirdAlphabet, new Random(8));
-
-        System.out.println("Исходный алфавит: " + originalAlphabet);
-        System.out.println("Первый алфавит: " + firstAlphabet);
-        System.out.println("Второй алфавит: " + secondAlphabet);
-        System.out.println("Третий алфавит: " + thirdAlphabet);
     }
 
     public static void main(String[] args) {
@@ -69,10 +69,13 @@ public class ThirdLab {
     static String encryption(String text) {
         String encryptedText = "";
         char[] charText = text.toCharArray();
-        int alphabetNum = 0;
+        int alphabetNum = 0, circuitNum = 0;
         for (char c : charText) {
-            encryptedText += alphabets.get(alphabetNum++).get(originalAlphabet.indexOf(c));
-            if (alphabetNum > 2) alphabetNum = 0;
+            encryptedText += circuits.get(circuitNum).get(alphabetNum).get(originalAlphabet.indexOf(c));
+            if (++alphabetNum >= circuits.get(circuitNum).size()) {
+                alphabetNum = 0;
+                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
+            }
         }
         return encryptedText;
     }
@@ -81,10 +84,13 @@ public class ThirdLab {
     static String decryption(String encryptedText) {
         String decryptedText = "";
         char[] charEncryptedText = encryptedText.toCharArray();
-        int alphabetNum = 0;
+        int alphabetNum = 0, circuitNum = 0;
         for (char c : charEncryptedText) {
-            decryptedText += originalAlphabet.get(alphabets.get(alphabetNum++).indexOf(c));
-            if (alphabetNum > 2) alphabetNum = 0;
+            decryptedText += originalAlphabet.get(circuits.get(circuitNum).get(alphabetNum).indexOf(c));
+            if (++alphabetNum >= circuits.get(circuitNum).size()) {
+                alphabetNum = 0;
+                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
+            }
         }
         return decryptedText;
     }
