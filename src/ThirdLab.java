@@ -39,6 +39,7 @@ public class ThirdLab {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String text = "", request = "", encryptedText = "", decryptedText = "";
+        int key = 0;
         System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\nВведите цифру:");
         request = sc.nextLine();
         while (!request.equals("STOP")) {
@@ -46,14 +47,18 @@ public class ThirdLab {
                 case "1" -> {
                     System.out.println("Введите текст:");
                     text = sc.nextLine();
-                    encryptedText = encryption(text);
+                    System.out.println("Введите ключ:");
+                    key = sc.nextInt();
+                    encryptedText = encryption(text, key);
                     System.out.println("Зашифрованный текст:");
                     System.out.println(encryptedText);
                 }
                 case "2" -> {
                     System.out.println("Введите зашифрованный текст:");
                     encryptedText = sc.nextLine();
-                    decryptedText = decryption(encryptedText);
+                    System.out.println("Введите ключ:");
+                    key = sc.nextInt();
+                    decryptedText = decryption(encryptedText, key);
                     System.out.println("Расшифрованный текст:");
                     System.out.println(decryptedText);
                 }
@@ -66,32 +71,42 @@ public class ThirdLab {
     }
 
     // Функция шифровки текста
-    static String encryption(String text) {
-        String encryptedText = "";
+    static String encryption(String text, int key) {
+        StringBuilder encryptedText = new StringBuilder();
         char[] charText = text.toCharArray();
-        int alphabetNum = 0, circuitNum = 0;
+        ArrayList<String> keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
+        int alphabetNum = 0, circuitNum = 0, amountOfLoops = 0;
         for (char c : charText) {
-            encryptedText += circuits.get(circuitNum).get(alphabetNum).get(originalAlphabet.indexOf(c));
+            encryptedText.append(circuits.get(circuitNum).get(alphabetNum).get(originalAlphabet.indexOf(c)));
             if (++alphabetNum >= circuits.get(circuitNum).size()) {
                 alphabetNum = 0;
-                if (++circuitNum >= circuits.size()) circuitNum = 0;
+            }
+            if (amountOfLoops++ >= Integer.parseInt(keyArray.get(circuitNum)) - 1) {
+                amountOfLoops = 0;
+                alphabetNum = 0;
+                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
             }
         }
-        return encryptedText;
+        return encryptedText.toString();
     }
 
     // Функция расшифровки зашифрованного текста
-    static String decryption(String encryptedText) {
-        String decryptedText = "";
+    static String decryption(String encryptedText, int key) {
+        StringBuilder decryptedText = new StringBuilder();
+        ArrayList<String> keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
         char[] charEncryptedText = encryptedText.toCharArray();
-        int alphabetNum = 0, circuitNum = 0;
+        int alphabetNum = 0, circuitNum = 0, amountOfLoops = 0;
         for (char c : charEncryptedText) {
-            decryptedText += originalAlphabet.get(circuits.get(circuitNum).get(alphabetNum).indexOf(c));
+            decryptedText.append(originalAlphabet.get(circuits.get(circuitNum).get(alphabetNum).indexOf(c)));
             if (++alphabetNum >= circuits.get(circuitNum).size()) {
                 alphabetNum = 0;
-                if (++circuitNum >= circuits.size()) circuitNum = 0;
+            }
+            if (amountOfLoops++ >= Integer.parseInt(keyArray.get(circuitNum)) - 1) {
+                amountOfLoops = 0;
+                alphabetNum = 0;
+                if (++circuitNum >= AMOUNT_OF_CIRCUITS) circuitNum = 0;
             }
         }
-        return decryptedText;
+        return decryptedText.toString();
     }
 }

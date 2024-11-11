@@ -5,9 +5,9 @@ public class FifthLab {
         Scanner sc = new Scanner(System.in);
         String text = "", request = "", encryptedText = "", decryptedText = "";
         int key = 0;
-        System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\nВведите цифру:");
-        request = sc.nextLine();
         while (!request.equals("STOP")) {
+            System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\nВведите цифру:");
+            request = sc.nextLine();
             switch (request) {
                 case "1" -> {
                     System.out.println("Введите текст:");
@@ -18,52 +18,62 @@ public class FifthLab {
                     System.out.println("Зашифрованный текст:");
                     System.out.println(encryptedText);
                 }
-//                case "2" -> {
-//                    System.out.println("Введите зашифрованный текст:");
-//                    encryptedText = sc.nextLine();
-//                    System.out.println("Введите ключ:");
-//                    key = sc.nextLine();
-//                    decryptedText = decryption(encryptedText, key);
-//                    System.out.println("Расшифрованный текст:");
-//                    System.out.println(decryptedText);
-//                }
+                case "2" -> {
+                    System.out.println("Введите зашифрованный текст:");
+                    encryptedText = sc.nextLine();
+                    System.out.println("Введите ключ:");
+                    key = sc.nextInt();
+                    decryptedText = decryption(encryptedText, key);
+                    System.out.println("Расшифрованный текст:");
+                    System.out.println(decryptedText);
+                }
                 default -> System.out.println("Неверный ввод");
             }
             System.out.println();
-            System.out.println("Что вы хотите сделать?\n1.Зашифровать текст\n2.Расшифровать текст\nВведите цифру:");
-            request = sc.nextLine();
         }
     }
 
     // Функция шифровки текста
     static String encryption(String text, int key) {
-        String encryptedText = "";
+        StringBuilder encryptedText = new StringBuilder();
         TreeMap<Integer, ArrayList<String>> map = new TreeMap<>();
-        ArrayList<String> textArray = new ArrayList<>(Arrays.asList(text.split(""))), keyArray = new ArrayList<>(Arrays.asList((key+"").split("")));
+        ArrayList<String> textArray = new ArrayList<>(Arrays.asList(text.split(""))), keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
         for (int i = 0; i < textArray.size() % keyArray.size(); i++) {
-            textArray.add("");
+            textArray.add(" ");
         }
         for (int i = 0; i < keyArray.size(); i++) {
             ArrayList<String> list = new ArrayList<>();
-            for (int j = 0; j < textArray.size(); j+=keyArray.size()) {
+            for (int j = 0; j < textArray.size(); j += keyArray.size()) {
                 list.add(textArray.get(i + j));
             }
             map.put(Integer.parseInt(keyArray.get(i)), list);
         }
-        for (int i = 1; i < keyArray.size()+1; i++) {
-            encryptedText += map.get(i).toString();
+        for (int i = 1; i < keyArray.size() + 1; i++) {
+            for (String s : map.get(i))
+                encryptedText.append(s);
         }
-        return encryptedText;
+        return encryptedText.toString();
     }
 
     // Функция расшифровки зашифрованного текста
-//    static String decryption(String encryptedText, String key) {
-//        String decryptedText = "";
-//        char[] charEncryptedText = encryptedText.toCharArray(), charKey = key.toCharArray();
-//        int charIndex = 0;
-//        for (char c : charEncryptedText) {
-//            decryptedText += alphabet.get(Math.floorMod(alphabet.indexOf(c) - alphabet.indexOf(charKey[Math.floorMod(charIndex++, charKey.length)]), alphabet.size()));
-//        }
-//        return decryptedText;
-//    }
+    static String decryption(String encryptedText, int key) {
+        StringBuilder decryptedText = new StringBuilder();
+        HashMap<Integer, ArrayList<String>> map = new HashMap<>();
+        ArrayList<String> textArray = new ArrayList<>(Arrays.asList(encryptedText.split(""))), keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
+        int num = 1;
+        for (int i = 0; i < textArray.size(); i += textArray.size() / keyArray.size()) {
+            ArrayList<String> list = new ArrayList<>();
+            for (int j = 0; j < textArray.size() / keyArray.size(); j++) {
+                list.add(textArray.get(j + i));
+            }
+            map.put(num++, list);
+        }
+        for (int i = 0; i < textArray.size() / keyArray.size(); i++) {
+            for (String s : keyArray) {
+                decryptedText.append(map.get(Integer.parseInt(s)).get(i));
+            }
+        }
+        return decryptedText.toString().trim();
+    }
 }
+
