@@ -87,7 +87,7 @@ public class FifthLab {
                     decryptedText.append(map.get(Integer.parseInt(keyArray.get(j))).get(i));
             }
         }
-        return decryptedText.toString().trim();
+        return decryptedText.toString();
     }
 }
 
