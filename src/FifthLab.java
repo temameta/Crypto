@@ -65,8 +65,11 @@ public class FifthLab {
         // Определение сколько раз позицию использовать при расшифровке
         for (int i = 0; i < keySize; i++)
             for (int j = 0; j < textSize; j += keySize)
-                if (i + j < textSize)
-                    iterators.set((Integer.parseInt(keyArray.get(i)) - 1), (iterators.get(i)+1));
+                if (i + j < textSize) {
+                    int index = Integer.parseInt(keyArray.get(i)) - 1;
+                    int elem = iterators.get(Integer.parseInt(keyArray.get(i))-1)+1;
+                    iterators.set(index, elem);
+                }
         int lastPos = 0;
         // Создание словаря, согласно которому будет понятно, на каком месте должны стоять символы
         for (Integer i : iterators) {
