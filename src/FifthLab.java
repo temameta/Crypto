@@ -13,7 +13,7 @@ public class FifthLab {
                     System.out.println("Введите текст:");
                     text = sc.nextLine();
                     System.out.println("Введите ключ:");
-                    key = sc.nextInt();
+                    key = Integer.parseInt(sc.nextLine());
                     encryptedText = encryption(text, key);
                     System.out.println("Зашифрованный текст:");
                     System.out.println(encryptedText);
@@ -22,7 +22,7 @@ public class FifthLab {
                     System.out.println("Введите зашифрованный текст:");
                     encryptedText = sc.nextLine();
                     System.out.println("Введите ключ:");
-                    key = sc.nextInt();
+                    key = Integer.parseInt(sc.nextLine());
                     decryptedText = decryption(encryptedText, key);
                     System.out.println("Расшифрованный текст:");
                     System.out.println(decryptedText);
@@ -36,41 +36,52 @@ public class FifthLab {
     // Функция шифровки текста
     static String encryption(String text, int key) {
         StringBuilder encryptedText = new StringBuilder();
-        TreeMap<Integer, ArrayList<String>> map = new TreeMap<>();
-        ArrayList<String> textArray = new ArrayList<>(Arrays.asList(text.split(""))), keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
-        for (int i = 0; i < textArray.size() % keyArray.size(); i++) {
-            textArray.add(" ");
-        }
-        for (int i = 0; i < keyArray.size(); i++) {
-            ArrayList<String> list = new ArrayList<>();
-            for (int j = 0; j < textArray.size(); j += keyArray.size()) {
-                list.add(textArray.get(i + j));
-            }
+        Map<Integer, List<String>> map = new TreeMap<>();
+        List<String> textArray = new ArrayList<>(Arrays.asList(text.split(""))),
+                keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
+        int keySize = keyArray.size(), textSize = textArray.size();
+        for (int i = 0; i < keySize; i++) {
+            List<String> list = new ArrayList<>();
+            for (int j = 0; j < textSize; j += keySize)
+                if (i + j < textSize)
+                    list.add(textArray.get(i + j));
             map.put(Integer.parseInt(keyArray.get(i)), list);
         }
-        for (int i = 1; i < keyArray.size() + 1; i++) {
+        for (Integer i : map.keySet())
             for (String s : map.get(i))
                 encryptedText.append(s);
-        }
         return encryptedText.toString();
     }
 
     // Функция расшифровки зашифрованного текста
     static String decryption(String encryptedText, int key) {
         StringBuilder decryptedText = new StringBuilder();
-        HashMap<Integer, ArrayList<String>> map = new HashMap<>();
-        ArrayList<String> textArray = new ArrayList<>(Arrays.asList(encryptedText.split(""))), keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
+        Map<Integer, List<String>> map = new HashMap<>();
+        List<String> textArray = new ArrayList<>(Arrays.asList(encryptedText.split(""))),
+                keyArray = new ArrayList<>(Arrays.asList((key + "").split("")));
+        int keySize = keyArray.size(), textSize = textArray.size();
+        List<Integer> iterators = new ArrayList<>(Collections.nCopies(keySize, 0));
         int num = 1;
-        for (int i = 0; i < textArray.size(); i += textArray.size() / keyArray.size()) {
-            ArrayList<String> list = new ArrayList<>();
-            for (int j = 0; j < textArray.size() / keyArray.size(); j++) {
-                list.add(textArray.get(j + i));
-            }
+        // Определение сколько раз позицию использовать при расшифровке
+        for (int i = 0; i < keySize; i++)
+            for (int j = 0; j < textSize; j += keySize)
+                if (i + j < textSize)
+                    iterators.set((Integer.parseInt(keyArray.get(i)) - 1), (iterators.get(i)+1));
+        int lastPos = 0;
+        // Создание словаря, согласно которому будет понятно, на каком месте должны стоять символы
+        for (Integer i : iterators) {
+            List<String> list = new ArrayList<>();
+            for (int j = 0; j < i; j++)
+                if (lastPos + j < textSize)
+                    list.add(textArray.get(j + lastPos));
+            lastPos += i;
             map.put(num++, list);
         }
-        for (int i = 0; i < textArray.size() / keyArray.size(); i++) {
-            for (String s : keyArray) {
-                decryptedText.append(map.get(Integer.parseInt(s)).get(i));
+        // Перенос символов из словаря в возвращаемую строку
+        for (int i = 0; i < Collections.max(iterators); i++) {
+            for (int j = 0; j < keySize; j++) {
+                if (i < map.get(Integer.parseInt(keyArray.get(j))).size())
+                    decryptedText.append(map.get(Integer.parseInt(keyArray.get(j))).get(i));
             }
         }
         return decryptedText.toString().trim();
