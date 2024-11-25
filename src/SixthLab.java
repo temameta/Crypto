@@ -14,7 +14,7 @@ public class SixthLab {
                     text = sc.nextLine();
                     System.out.println("Введите ключ:");
                     key = Integer.parseInt(sc.nextLine());
-                    System.out.println("Введите неиспользумеые ячейки в виде \"x1 y1 x2 y2 ... xn yn\":");
+                    System.out.println("Введите неиспользуемые ячейки в виде \"x1 y1 x2 y2 ... xn yn\":");
                     unusedCells = sc.nextLine();
                     encryptedText = encryption(text, key, unusedCells);
                     System.out.println("Зашифрованный текст:");
