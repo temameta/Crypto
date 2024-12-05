@@ -21,9 +21,9 @@ public class SignaturedDocument {
 
     private int calculateSignature(String text, List<Integer> secretKey) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         int hashText = AdditionalMath.hashFunction(text);
-        int d = secretKey.get(0);
-        int N = secretKey.get(1);
-        return AdditionalMath.modExp(hashText, d, N);
+        int x = secretKey.get(0);
+        int p = secretKey.get(1);
+        return AdditionalMath.modExp(hashText, x, p);
     }
 
     public String getText() {

@@ -32,4 +32,21 @@ public final class AdditionalMath {
             ret += Integer.parseInt(String.valueOf(b));
         return ret;
     }
+
+    public static boolean isPrime(int n) {
+        for (int i = 2; i <= Math.sqrt(n); i++)
+            if (n % i == 0)
+                return false;
+        return true;
+    }
+
+    public static int reciprocalNum(int num, int mod) {
+        int reciprocalNum = 0;
+        int i = 2;
+        while (reciprocalNum == 0)
+            if (Math.floorMod(num * i++, mod) == 1)
+                reciprocalNum = i;
+        return reciprocalNum;
+    }
 }
+
