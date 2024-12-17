@@ -8,7 +8,7 @@ public class Main {
             Scanner sc = new Scanner(System.in);
             Sender matvei = new Sender();
 
-            System.out.println("Введите числа a и b через \"Enter\" для Нади, меньше 23");
+            System.out.println("Введите числа a и b через \"Enter\" для Нади, меньше 23.\nЭти числа требуются для создания секретного кода");
             int a = Integer.parseInt(sc.nextLine());
             int b = Integer.parseInt(sc.nextLine());
             Reciever nadya = new Reciever(matvei, a, b);
@@ -22,8 +22,18 @@ public class Main {
             System.out.println(matvei);
 
             nadya.calculateZ(matvei.getDocuments().get(0));
+            System.out.println("Число z у Нади: " + nadya.getZ());
             matvei.calculateW(nadya.getZ());
-            System.out.println(nadya.signatureVerification(matvei.getDocuments().get(0), matvei.getW()));
+            System.out.println("Число w у Матвея: " + matvei.getW());
+
+            if (nadya.signatureVerification(matvei.getDocuments().get(0), matvei.getW())) {
+                System.out.println(matvei);
+                System.out.println("Подпись на документе Матвея правильная");
+            }
+            else {
+                System.out.println(matvei);
+                System.out.println("Подпись на документе Матвея неправильная");
+            }
 
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
             System.out.println("FATAL ERROR " + e.getLocalizedMessage());
