@@ -20,8 +20,6 @@ public class Sender {
         this.openKey = openKey;
     }
 
-
-
     private void setSecretKey(List<Integer> secretKey) {
         this.secretKey = secretKey;
     }

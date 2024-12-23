@@ -14,15 +14,6 @@ public final class AdditionalMath {
             return (x * z * z) % N;
     }
 
-    public static int NOD(int x, int y) {
-        while (y != 0) {
-            int tmp = x % y;
-            x = y;
-            y = tmp;
-        }
-        return x;
-    }
-
     public static int hashFunction(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] data1 = text.getBytes(StandardCharsets.UTF_8);
@@ -31,13 +22,6 @@ public final class AdditionalMath {
         for (byte b : digest)
             ret += Integer.parseInt(String.valueOf(b));
         return ret;
-    }
-
-    public static boolean isPrime(int n) {
-        for (int i = 2; i <= Math.sqrt(n); i++)
-            if (n % i == 0)
-                return false;
-        return true;
     }
 
     public static int reciprocalNum(int num, int mod) {
