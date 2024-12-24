@@ -50,12 +50,14 @@ public class Main {
 
         public Sender() {
             calculateKeys();
+
             this.documents = new ArrayList<>();
         }
 
         private void setOpenKey(List<Integer> openKey) {
             this.openKey = openKey;
         }
+
 
         private void setSecretKey(List<Integer> secretKey) {
             this.secretKey = secretKey;
@@ -242,7 +244,7 @@ public class Main {
 
         @Override
         public String toString() {
-            return String.format("Text: \"%s\"\nSignature: \"%d\"\n", this.text, this.signature);
+            return String.format("Text: \"%s\"\nSignature: \"%d\"\n", this.text, Math.abs(this.signature));
         }
     }
 
@@ -250,8 +252,10 @@ public class Main {
         public static int modExp(int x, int y, int N) {
             if (y == 0) return 1;
             int z = modExp(x, y / 2, N);
-            if (y % 2 == 0) return (z * z) % N;
-            else return (x * z * z) % N;
+            if (y % 2 == 0)
+                return (z * z) % N;
+            else
+                return (x * z * z) % N;
         }
 
         public static int hashFunction(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -267,7 +271,9 @@ public class Main {
         public static int reciprocalNum(int num, int mod) {
             int reciprocalNum = 0;
             int i = 2;
-            while (reciprocalNum == 0) if (Math.floorMod(num * i++, mod) == 1) reciprocalNum = i;
+            while (reciprocalNum == 0)
+                if (Math.floorMod(num * i++, mod) == 1)
+                    reciprocalNum = i;
             return reciprocalNum;
         }
     }
